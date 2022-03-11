@@ -20,13 +20,13 @@ public class CelebrityService {
     var knownPeople = new ArrayList<Person>();
     var celebrities = new LinkedHashMap<Person, Integer>();
 
-    for (var celeb : team) {
-      if (celeb.getPeople() != null && !celeb.getPeople().isEmpty()) {
-        knownPeople.addAll(celeb.getPeople());
-        log.debug("{} is a common person.", celeb);
+    for (var member : team) {
+      if (member.getPeople() != null && !member.getPeople().isEmpty()) {
+        knownPeople.addAll(member.getPeople());
+        log.debug("{} is a common person.", member);
       } else {
-        celebrities.put(celeb, 0);
-        log.debug("{} is a possible celebrity.", celeb);
+        celebrities.put(member, 0);
+        log.debug("{} is a possible celebrity.", member);
       }
     }
 
