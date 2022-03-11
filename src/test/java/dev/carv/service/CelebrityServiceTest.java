@@ -103,11 +103,11 @@ class CelebrityServiceTest {
   }
 
   private Person celebrityPerson() {
-    return new Person(faker.name().firstName(), null);
+    return new Person(faker.name().firstName(), faker.name().lastName(), null);
   }
 
   private Person commonPerson(List<Person> people) {
-    return new Person(faker.name().firstName(), people);
+    return new Person(faker.name().firstName(), faker.name().lastName(), people);
   }
 
 }

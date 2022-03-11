@@ -10,7 +10,8 @@ import lombok.ToString;
 @AllArgsConstructor
 public class Person {
 
-  private String name;
+  private String firstName;
+  private String lastName;
 
   @ToString.Exclude
   private List<Person> people;
