@@ -41,8 +41,7 @@ class CelebrityServiceTest {
 
     var found = service.findCelebrity(team);
 
-    assertThat(found.isPresent());
-    assertThat(found.get()).isEqualTo(celebrity);
+    assertThat(found).isPresent().contains(celebrity);
   }
 
   @Test
@@ -61,7 +60,7 @@ class CelebrityServiceTest {
 
     var found = service.findCelebrity(team);
 
-    assertThat(found.isEmpty());
+    assertThat(found).isEmpty();
   }
 
   @Test
@@ -83,7 +82,7 @@ class CelebrityServiceTest {
 
     var found = service.findCelebrity(team);
 
-    assertThat(found.isEmpty());
+    assertThat(found).isEmpty();
   }
 
   private Person celebrityPerson() {
@@ -93,4 +92,5 @@ class CelebrityServiceTest {
   private Person commonPerson(Person celeb) {
     return new Person(faker.name().firstName(), celeb);
   }
+
 }
