@@ -30,8 +30,11 @@ public class CelebrityService {
       }
     }
 
-    celebritiesKnownByPeople(celebrities, knownPeople);
+    if (celebrities.isEmpty()) {
+      return Optional.empty();
+    }
 
+    celebritiesKnownByPeople(celebrities, knownPeople);
     return theCelebrity(celebrities, team.size() - 1);
   }
 
@@ -55,5 +58,4 @@ public class CelebrityService {
     }
     return Optional.empty();
   }
-
 }
