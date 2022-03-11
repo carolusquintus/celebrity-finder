@@ -14,7 +14,7 @@ public class CelebrityService {
 
   public Optional<Person> findCelebrity(List<Person> team) {
     for (var celeb : team) {
-      if (celeb.getKnown() == null && isKnownBy(celeb, team) == (team.size() - 1)) {
+      if (celeb.getKnown() == null && isKnownByAllTeam(celeb, team)) {
         return Optional.of(celeb);
       }
       log.debug("{} is a common person.", celeb);
@@ -22,7 +22,7 @@ public class CelebrityService {
     return Optional.empty();
   }
 
-  private int isKnownBy(Person celeb, List<Person> team) {
+  private boolean isKnownByAllTeam(Person celeb, List<Person> team) {
     int knownBy = 0;
     for (var member : team) {
       if (member.getKnown() != null
@@ -32,7 +32,7 @@ public class CelebrityService {
       }
     }
     log.debug("{} is known by {}.", celeb, knownBy);
-    return knownBy;
+    return knownBy == (team.size() - 1);
   }
 
 }

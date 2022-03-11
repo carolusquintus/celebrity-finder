@@ -1,7 +1,7 @@
 # celebrity-finder
 Find the Celebrity
 
-To run test type:
+To run test:
 
 ```
 $ mvn clean verify
