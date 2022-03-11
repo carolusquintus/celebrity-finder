@@ -1,7 +1,10 @@
 package dev.carv.service;
 
 import dev.carv.dto.Person;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
 
@@ -13,26 +16,44 @@ import lombok.extern.slf4j.Slf4j;
 public class CelebrityService {
 
   public Optional<Person> findCelebrity(List<Person> team) {
+
+    var knownPeople = new ArrayList<Person>();
+    var celebrities = new LinkedHashMap<Person, Integer>();
+
     for (var celeb : team) {
-      if (celeb.getKnown() == null && isKnownByAllTeam(celeb, team)) {
-        return Optional.of(celeb);
+      if (celeb.getPeople() != null && !celeb.getPeople().isEmpty()) {
+        knownPeople.addAll(celeb.getPeople());
+        log.debug("{} is a common person.", celeb);
+      } else {
+        celebrities.put(celeb, 0);
+        log.debug("{} is a possible celebrity.", celeb);
       }
-      log.debug("{} is a common person.", celeb);
     }
-    return Optional.empty();
+
+    celebritiesKnownByPeople(celebrities, knownPeople);
+
+    return theCelebrity(celebrities, team.size() - 1);
   }
 
-  private boolean isKnownByAllTeam(Person celeb, List<Person> team) {
-    int knownBy = 0;
-    for (var member : team) {
-      if (member.getKnown() != null
-          && celeb.getName().equalsIgnoreCase(member.getKnown().getName())) {
-        log.debug("{} is known by {}.", celeb, member);
-        knownBy++;
+  private void celebritiesKnownByPeople(
+      Map<Person, Integer> celebrities, List<Person> knownPeople) {
+    for (var person : knownPeople) {
+      if (celebrities.containsKey(person)) {
+        int quantity = celebrities.get(person) + 1;
+        celebrities.put(person, quantity);
       }
     }
-    log.debug("{} is known by {}.", celeb, knownBy);
-    return knownBy == (team.size() - 1);
+  }
+
+  private Optional<Person> theCelebrity(Map<Person, Integer> celebrities, int expected) {
+    for (var celeb : celebrities.entrySet()) {
+      if (celeb.getValue() == expected) {
+        log.debug("{} is The Celebrity known by {}.", celeb.getKey(), celeb.getValue());
+        return Optional.of(celeb.getKey());
+      }
+      log.debug("{} is just an influencer known by {}.", celeb.getKey(), celeb.getValue());
+    }
+    return Optional.empty();
   }
 
 }
