@@ -1,18 +1,21 @@
 package dev.carv.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.TestInstance.Lifecycle.PER_CLASS;
 
 import com.github.javafaker.Faker;
 import dev.carv.dto.Person;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Locale;
+import java.util.Set;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestInstance.Lifecycle;
 import org.junit.jupiter.api.TestInstance;
 
-@TestInstance(Lifecycle.PER_CLASS)
+@TestInstance(PER_CLASS)
 class CelebrityServiceTest {
 
   Faker faker;
@@ -28,16 +31,16 @@ class CelebrityServiceTest {
   @DisplayName("Should find a Celebrity in a team")
   void findCelebrity() {
 
-    var celeb0 = celebrityPerson();
+    var celeb0 = newPerson(null);
 
-    var person0 = commonPerson(List.of(celeb0));
-    var person1 = commonPerson(List.of(celeb0, person0));
-    var person2 = commonPerson(List.of(celeb0));
-    var person3 = commonPerson(List.of(celeb0));
-    var person4 = commonPerson(List.of(celeb0, person3, person0));
-    var person5 = commonPerson(List.of(celeb0));
-    var person6 = commonPerson(List.of(celeb0, person3, person1, person2, person4, person0));
-    var person7 = commonPerson(List.of(celeb0, person6, person3, person1, person2, person4, person0));
+    var person0 = newPerson(Set.of(celeb0));
+    var person1 = newPerson(Set.of(celeb0, person0));
+    var person2 = newPerson(Set.of(celeb0));
+    var person3 = newPerson(Set.of(celeb0));
+    var person4 = newPerson(Set.of(celeb0, person3, person0));
+    var person5 = newPerson(Set.of(celeb0));
+    var person6 = newPerson(Set.of(celeb0, person3, person1, person2, person4, person0));
+    var person7 = newPerson(Set.of(celeb0, person6, person3, person1, person2, person4, person0));
 
     var team = List.of(
       person0, person1, person2, person3,
@@ -54,16 +57,16 @@ class CelebrityServiceTest {
   @DisplayName("Should not find a Celebrity which is not a team member")
   void notFindCelebrity() {
 
-    var celeb0 = celebrityPerson();
+    var celeb0 = newPerson(null);
 
-    var person0 = commonPerson(List.of(celeb0));
-    var person1 = commonPerson(List.of(celeb0, person0));
-    var person2 = commonPerson(List.of(celeb0));
-    var person3 = commonPerson(List.of(celeb0));
-    var person4 = commonPerson(List.of(celeb0, person3, person0));
-    var person5 = commonPerson(List.of(celeb0));
-    var person6 = commonPerson(List.of(celeb0, person3, person1, person2, person4, person0));
-    var person7 = commonPerson(List.of(celeb0, person6, person3, person1, person2, person4, person0));
+    var person0 = newPerson(Set.of(celeb0));
+    var person1 = newPerson(Set.of(celeb0, person0));
+    var person2 = newPerson(Set.of(celeb0));
+    var person3 = newPerson(Set.of(celeb0));
+    var person4 = newPerson(Set.of(celeb0, person3, person0));
+    var person5 = newPerson(Set.of(celeb0));
+    var person6 = newPerson(Set.of(celeb0, person3, person1, person2, person4, person0));
+    var person7 = newPerson(Set.of(celeb0, person6, person3, person1, person2, person4, person0));
 
     var team = List.of(
       person0, person1, person2, person3,
@@ -78,17 +81,17 @@ class CelebrityServiceTest {
   @Test
   @DisplayName("Should not find any Celebrity which is not known by all team members")
   void notFindAnyCelebrity() {
-    var celeb0 = celebrityPerson();
-    var celeb1 = celebrityPerson();
+    var celeb0 = newPerson(null);
+    var celeb1 = newPerson(Set.of());
 
-    var person0 = commonPerson(List.of(celeb0));
-    var person1 = commonPerson(List.of(celeb0, person0));
-    var person2 = commonPerson(List.of(celeb0));
-    var person3 = commonPerson(List.of(celeb1));
-    var person4 = commonPerson(List.of(celeb1, person3, person0));
-    var person5 = commonPerson(List.of(celeb0));
-    var person6 = commonPerson(List.of(celeb1, person3, person1, person2, person4, person0));
-    var person7 = commonPerson(List.of(celeb0, person6, person3, person1, person2, person4, person0));
+    var person0 = newPerson(Set.of(celeb0));
+    var person1 = newPerson(Set.of(celeb0, person0));
+    var person2 = newPerson(Set.of(celeb0));
+    var person3 = newPerson(Set.of(celeb1));
+    var person4 = newPerson(Set.of(celeb1, person3, person0));
+    var person5 = newPerson(Set.of(celeb0));
+    var person6 = newPerson(Set.of(celeb1, person3, person1, person2, person4, person0));
+    var person7 = newPerson(Set.of(celeb0, person6, person3, person1, person2, person4, person0));
 
     var team = List.of(
         celeb0,
@@ -102,11 +105,17 @@ class CelebrityServiceTest {
     assertThat(found).isEmpty();
   }
 
-  private Person celebrityPerson() {
-    return new Person(faker.name().firstName(), faker.name().lastName(), null);
+  @Test
+  @DisplayName("Should not find a Celebrity on empty list")
+  void notFindCelebrityEmptyList() {
+    var team = new ArrayList<Person>();
+
+    var found = service.findCelebrity(team);
+
+    assertThat(found).isEmpty();
   }
 
-  private Person commonPerson(List<Person> people) {
+  private Person newPerson(Collection<Person> people) {
     return new Person(faker.name().firstName(), faker.name().lastName(), people);
   }
 

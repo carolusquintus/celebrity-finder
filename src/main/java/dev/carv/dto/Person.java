@@ -1,12 +1,15 @@
 package dev.carv.dto;
 
-import java.util.List;
+import static lombok.AccessLevel.NONE;
+
+import java.util.Collection;
 import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.Data;
+import lombok.Setter;
 import lombok.ToString;
 
-@Getter
-@ToString
+@Data
+@Setter(NONE)
 @AllArgsConstructor
 public class Person {
 
@@ -14,6 +17,6 @@ public class Person {
   private String lastName;
 
   @ToString.Exclude
-  private List<Person> people;
+  private Collection<Person> people;
 
 }
