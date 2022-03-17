@@ -3,26 +3,25 @@ package dev.carv.service;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.TestInstance.Lifecycle.PER_CLASS;
 
-import com.github.javafaker.Faker;
 import dev.carv.dto.Person;
 import dev.carv.service.impl.CelebrityServiceLambdasImpl;
+import dev.carv.util.provider.CommonProvider;
 import java.util.List;
-import java.util.Locale;
 import java.util.Set;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 
 @TestInstance(PER_CLASS)
-class CelebrityServiceLambdasImplTest {
+class CelebrityServiceLambdasImplTest implements CommonProvider {
 
-  Faker faker;
   CelebrityService service;
 
   @BeforeAll
   void setUpAll() {
-    faker = new Faker(new Locale("es"));
     service = new CelebrityServiceLambdasImpl();
   }
 
@@ -66,10 +65,12 @@ class CelebrityServiceLambdasImplTest {
     var person5 = newPerson(Set.of(celeb0));
     var person6 = newPerson(Set.of(celeb0, person3, person1, person2, person4, person0));
     var person7 = newPerson(Set.of(celeb0, person6, person3, person1, person2, person4, person0));
+    var person8 = newPerson(Set.of());
 
     var team = List.of(
       person0, person1, person2, person3,
-      person4, person5, person6, person7
+      person4, person5, person6, person7,
+      person8
     );
 
     var found = service.findCelebrity(team);
@@ -92,12 +93,14 @@ class CelebrityServiceLambdasImplTest {
     var person5 = newPerson(Set.of(celeb0));
     var person6 = newPerson(Set.of(celeb1, person3, person1, person2, person4, person0));
     var person7 = newPerson(Set.of(celeb0, person6, person3, person1, person2, person4, person0));
+    var person8 = newPerson(Set.of());
 
     var team = List.of(
         celeb0,
         person0, person1, person2, person3,
         celeb1,
-        person4, person5, person6, person7
+        person4, person5, person6, person7,
+        person8
     );
 
     var found = service.findCelebrity(team);
@@ -105,33 +108,13 @@ class CelebrityServiceLambdasImplTest {
     assertThat(found).isEmpty();
   }
 
-  @Test
-  @DisplayName("Should not find a Celebrity in one person list")
-  void notFindCelebrityOnePersonList() {
-    var celeb0 = newPerson(null);
-    var found = service.findCelebrity(List.of(celeb0));
+  @DisplayName("Should not find a Celebrity on")
+  @ParameterizedTest(name = "{0} list.")
+  @MethodSource("teamProvider")
+  void notFindCelebrityOnList(List<Person> team) {
+    var found = service.findCelebrity(team);
 
     assertThat(found).isEmpty();
-  }
-
-  @Test
-  @DisplayName("Should not find a Celebrity on empty list")
-  void notFindCelebrityEmptyList() {
-    var found = service.findCelebrity(List.of());
-
-    assertThat(found).isEmpty();
-  }
-
-  @Test
-  @DisplayName("Should not find a Celebrity on null list")
-  void notFindCelebrityNullList() {
-    var found = service.findCelebrity(null);
-
-    assertThat(found).isEmpty();
-  }
-
-  private Person newPerson(Set<Person> people) {
-    return new Person(faker.name().firstName(), faker.name().lastName(), people);
   }
 
 }
