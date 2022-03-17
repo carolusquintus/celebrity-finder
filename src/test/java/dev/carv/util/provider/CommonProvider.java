@@ -11,7 +11,7 @@ public interface CommonProvider {
 
   Faker faker = new Faker(new Locale("es"));
 
-  default Person newPerson(Set<Person> people) {
+  default Person personProvider(Set<Person> people) {
     return new Person(faker.name().firstName(), faker.name().lastName(), people);
   }
 
@@ -19,7 +19,7 @@ public interface CommonProvider {
     return Stream.of(
         null,
         List.of(),
-        List.of(newPerson(null))
+        List.of(personProvider(null))
     );
   }
 

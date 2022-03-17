@@ -29,16 +29,16 @@ class CelebrityServiceLambdasImplTest implements CommonProvider {
   @DisplayName("Should find a Celebrity in a team")
   void findCelebrity() {
 
-    var celeb0 = newPerson(null);
+    var celeb0 = personProvider(null);
 
-    var person0 = newPerson(Set.of(celeb0));
-    var person1 = newPerson(Set.of(celeb0, person0));
-    var person2 = newPerson(Set.of(celeb0));
-    var person3 = newPerson(Set.of(celeb0));
-    var person4 = newPerson(Set.of(celeb0, person3, person0));
-    var person5 = newPerson(Set.of(celeb0));
-    var person6 = newPerson(Set.of(celeb0, person3, person1, person2, person4, person0));
-    var person7 = newPerson(Set.of(celeb0, person6, person3, person1, person2, person4, person0));
+    var person0 = personProvider(Set.of(celeb0));
+    var person1 = personProvider(Set.of(celeb0, person0));
+    var person2 = personProvider(Set.of(celeb0));
+    var person3 = personProvider(Set.of(celeb0));
+    var person4 = personProvider(Set.of(celeb0, person3, person0));
+    var person5 = personProvider(Set.of(celeb0));
+    var person6 = personProvider(Set.of(celeb0, person3, person1, person2, person4, person0));
+    var person7 = personProvider(Set.of(celeb0, person6, person3, person1, person2, person4, person0));
 
     var team = List.of(
       person0, person1, person2, person3,
@@ -55,17 +55,17 @@ class CelebrityServiceLambdasImplTest implements CommonProvider {
   @DisplayName("Should not find a Celebrity which is not a team member")
   void notFindCelebrity() {
 
-    var celeb0 = newPerson(null);
+    var celeb0 = personProvider(null);
 
-    var person0 = newPerson(Set.of(celeb0));
-    var person1 = newPerson(Set.of(celeb0, person0));
-    var person2 = newPerson(Set.of(celeb0));
-    var person3 = newPerson(Set.of(celeb0));
-    var person4 = newPerson(Set.of(celeb0, person3, person0));
-    var person5 = newPerson(Set.of(celeb0));
-    var person6 = newPerson(Set.of(celeb0, person3, person1, person2, person4, person0));
-    var person7 = newPerson(Set.of(celeb0, person6, person3, person1, person2, person4, person0));
-    var person8 = newPerson(Set.of());
+    var person0 = personProvider(Set.of(celeb0));
+    var person1 = personProvider(Set.of(celeb0, person0));
+    var person2 = personProvider(Set.of(celeb0));
+    var person3 = personProvider(Set.of(celeb0));
+    var person4 = personProvider(Set.of(celeb0, person3, person0));
+    var person5 = personProvider(Set.of(celeb0));
+    var person6 = personProvider(Set.of(celeb0, person3, person1, person2, person4, person0));
+    var person7 = personProvider(Set.of(celeb0, person6, person3, person1, person2, person4, person0));
+    var person8 = personProvider(Set.of());
 
     var team = List.of(
       person0, person1, person2, person3,
@@ -82,18 +82,18 @@ class CelebrityServiceLambdasImplTest implements CommonProvider {
   @DisplayName("Should not find any Celebrity which is not known by all team members")
   void notFindAnyCelebrity() {
 
-    var celeb0 = newPerson(null);
-    var celeb1 = newPerson(Set.of());
+    var celeb0 = personProvider(null);
+    var celeb1 = personProvider(Set.of());
 
-    var person0 = newPerson(Set.of(celeb0));
-    var person1 = newPerson(Set.of(celeb0, person0));
-    var person2 = newPerson(Set.of(celeb0));
-    var person3 = newPerson(Set.of(celeb1));
-    var person4 = newPerson(Set.of(celeb1, person3, person0));
-    var person5 = newPerson(Set.of(celeb0));
-    var person6 = newPerson(Set.of(celeb1, person3, person1, person2, person4, person0));
-    var person7 = newPerson(Set.of(celeb0, person6, person3, person1, person2, person4, person0));
-    var person8 = newPerson(Set.of());
+    var person0 = personProvider(Set.of(celeb0));
+    var person1 = personProvider(Set.of(celeb0, person0));
+    var person2 = personProvider(Set.of(celeb0));
+    var person3 = personProvider(Set.of(celeb1));
+    var person4 = personProvider(Set.of(celeb1, person3, person0));
+    var person5 = personProvider(Set.of(celeb0));
+    var person6 = personProvider(Set.of(celeb1, person3, person1, person2, person4, person0));
+    var person7 = personProvider(Set.of(celeb0, person6, person3, person1, person2, person4, person0));
+    var person8 = personProvider(Set.of());
 
     var team = List.of(
         celeb0,
