@@ -2,7 +2,7 @@ package dev.carv.dto;
 
 import static lombok.AccessLevel.NONE;
 
-import java.util.Collection;
+import java.util.Set;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.Setter;
@@ -17,6 +17,6 @@ public class Person {
   private String lastName;
 
   @ToString.Exclude
-  private Collection<Person> people;
+  private Set<Person> people;
 
 }

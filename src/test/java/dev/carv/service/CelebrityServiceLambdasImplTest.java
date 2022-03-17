@@ -5,8 +5,7 @@ import static org.junit.jupiter.api.TestInstance.Lifecycle.PER_CLASS;
 
 import com.github.javafaker.Faker;
 import dev.carv.dto.Person;
-import java.util.ArrayList;
-import java.util.Collection;
+import dev.carv.service.impl.CelebrityServiceLambdasImpl;
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
@@ -16,7 +15,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 
 @TestInstance(PER_CLASS)
-class CelebrityServiceTest {
+class CelebrityServiceLambdasImplTest {
 
   Faker faker;
   CelebrityService service;
@@ -24,7 +23,7 @@ class CelebrityServiceTest {
   @BeforeAll
   void setUpAll() {
     faker = new Faker(new Locale("es"));
-    service = new CelebrityService();
+    service = new CelebrityServiceLambdasImpl();
   }
 
   @Test
@@ -81,6 +80,7 @@ class CelebrityServiceTest {
   @Test
   @DisplayName("Should not find any Celebrity which is not known by all team members")
   void notFindAnyCelebrity() {
+
     var celeb0 = newPerson(null);
     var celeb1 = newPerson(Set.of());
 
@@ -106,16 +106,31 @@ class CelebrityServiceTest {
   }
 
   @Test
-  @DisplayName("Should not find a Celebrity on empty list")
-  void notFindCelebrityEmptyList() {
-    var team = new ArrayList<Person>();
-
-    var found = service.findCelebrity(team);
+  @DisplayName("Should not find a Celebrity in one person list")
+  void notFindCelebrityOnePersonList() {
+    var celeb0 = newPerson(null);
+    var found = service.findCelebrity(List.of(celeb0));
 
     assertThat(found).isEmpty();
   }
 
-  private Person newPerson(Collection<Person> people) {
+  @Test
+  @DisplayName("Should not find a Celebrity on empty list")
+  void notFindCelebrityEmptyList() {
+    var found = service.findCelebrity(List.of());
+
+    assertThat(found).isEmpty();
+  }
+
+  @Test
+  @DisplayName("Should not find a Celebrity on null list")
+  void notFindCelebrityNullList() {
+    var found = service.findCelebrity(null);
+
+    assertThat(found).isEmpty();
+  }
+
+  private Person newPerson(Set<Person> people) {
     return new Person(faker.name().firstName(), faker.name().lastName(), people);
   }
 
