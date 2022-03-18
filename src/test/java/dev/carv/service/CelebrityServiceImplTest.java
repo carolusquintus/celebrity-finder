@@ -1,5 +1,6 @@
 package dev.carv.service;
 
+import static java.util.concurrent.TimeUnit.MICROSECONDS;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.TestInstance.Lifecycle.PER_CLASS;
 
@@ -9,21 +10,31 @@ import dev.carv.util.provider.CommonProvider;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.time.StopWatch;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 
+@Slf4j
 @TestInstance(PER_CLASS)
 class CelebrityServiceImplTest implements CommonProvider {
 
   CelebrityService service;
+  StopWatch timer;
 
   @BeforeAll
   void setUpAll() {
     service = new CelebrityServiceImpl();
+  }
+
+  @BeforeEach
+  void setUp() {
+    timer = new StopWatch();
   }
 
   @Test
@@ -47,7 +58,11 @@ class CelebrityServiceImplTest implements CommonProvider {
       person4, person5, person6, person7
     ));
 
+    timer.start();
     var found = service.findCelebrity(team);
+    timer.stop();
+
+    log.debug("findCelebrity(): {} us", timer.getTime(MICROSECONDS));
 
     assertThat(found).isPresent().contains(celeb0);
   }
@@ -68,13 +83,17 @@ class CelebrityServiceImplTest implements CommonProvider {
     var person7 = personProvider(Set.of(celeb0, person6, person3, person1, person2, person4, person0));
     var person8 = personProvider(Set.of());
 
-    var team = List.of(
+    var team = new ArrayList<>(List.of(
       person0, person1, person2, person3,
       person4, person5, person6, person7,
       person8
-    );
+    ));
 
+    timer.start();
     var found = service.findCelebrity(team);
+    timer.stop();
+
+    log.debug("notFindCelebrity(): {} us", timer.getTime(MICROSECONDS));
 
     assertThat(found).isEmpty();
   }
@@ -96,15 +115,19 @@ class CelebrityServiceImplTest implements CommonProvider {
     var person7 = personProvider(Set.of(celeb0, person6, person3, person1, person2, person4, person0));
     var person8 = personProvider(Set.of());
 
-    var team = List.of(
+    var team = new ArrayList<>(List.of(
       celeb0,
       person0, person1, person2, person3,
       celeb1,
       person4, person5, person6, person7,
       person8
-    );
+    ));
 
+    timer.start();
     var found = service.findCelebrity(team);
+    timer.stop();
+
+    log.debug("notFindAnyCelebrity(): {} us", timer.getTime(MICROSECONDS));
 
     assertThat(found).isEmpty();
   }
@@ -113,7 +136,11 @@ class CelebrityServiceImplTest implements CommonProvider {
   @ParameterizedTest(name = "{0} list.")
   @MethodSource("teamProvider")
   void notFindCelebrityOnList(List<Person> team) {
+    timer.start();
     var found = service.findCelebrity(team);
+    timer.stop();
+
+    log.debug("notFindCelebrityOnList(): {} us", timer.getTime(MICROSECONDS));
 
     assertThat(found).isEmpty();
   }

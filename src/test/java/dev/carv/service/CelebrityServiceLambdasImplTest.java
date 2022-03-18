@@ -1,5 +1,6 @@
 package dev.carv.service;
 
+import static java.util.concurrent.TimeUnit.MICROSECONDS;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.TestInstance.Lifecycle.PER_CLASS;
 
@@ -8,21 +9,31 @@ import dev.carv.service.impl.CelebrityServiceLambdasImpl;
 import dev.carv.util.provider.CommonProvider;
 import java.util.List;
 import java.util.Set;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.time.StopWatch;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 
+@Slf4j
 @TestInstance(PER_CLASS)
 class CelebrityServiceLambdasImplTest implements CommonProvider {
 
   CelebrityService service;
+  StopWatch timer;
 
   @BeforeAll
   void setUpAll() {
     service = new CelebrityServiceLambdasImpl();
+  }
+
+  @BeforeEach
+  void setUp() {
+    timer = new StopWatch();
   }
 
   @Test
@@ -46,7 +57,11 @@ class CelebrityServiceLambdasImplTest implements CommonProvider {
       person4, person5, person6, person7
     );
 
+    timer.start();
     var found = service.findCelebrity(team);
+    timer.stop();
+
+    log.debug("findCelebrity(): {} us", timer.getTime(MICROSECONDS));
 
     assertThat(found).isPresent().contains(celeb0);
   }
@@ -73,7 +88,11 @@ class CelebrityServiceLambdasImplTest implements CommonProvider {
       person8
     );
 
+    timer.start();
     var found = service.findCelebrity(team);
+    timer.stop();
+
+    log.debug("notFindCelebrity(): {} us", timer.getTime(MICROSECONDS));
 
     assertThat(found).isEmpty();
   }
@@ -103,7 +122,11 @@ class CelebrityServiceLambdasImplTest implements CommonProvider {
         person8
     );
 
+    timer.start();
     var found = service.findCelebrity(team);
+    timer.stop();
+
+    log.debug("notFindAnyCelebrity(): {} us", timer.getTime(MICROSECONDS));
 
     assertThat(found).isEmpty();
   }
@@ -112,7 +135,11 @@ class CelebrityServiceLambdasImplTest implements CommonProvider {
   @ParameterizedTest(name = "{0} list.")
   @MethodSource("teamProvider")
   void notFindCelebrityOnList(List<Person> team) {
+    timer.start();
     var found = service.findCelebrity(team);
+    timer.stop();
+
+    log.debug("notFindCelebrityOnList: {} us", timer.getTime(MICROSECONDS));
 
     assertThat(found).isEmpty();
   }
